@@ -33,7 +33,8 @@ RUN curl -L https://github.com/PowerShell/PowerShell/releases/download/v7.0.2/po
 && mkdir -p /opt/microsoft/powershell/7 \
 && tar zxf /tmp/powershell.tar.gz -C /opt/microsoft/powershell/7 \
 && chmod +x /opt/microsoft/powershell/7/pwsh \
-&& ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
+&& ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh \
+&& ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/powershell.exe
 
 RUN pwsh -Command Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted \
 && pwsh -Command Install-Module -Name PSScriptAnalyzer
