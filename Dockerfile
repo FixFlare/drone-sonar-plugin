@@ -29,15 +29,14 @@ RUN apk add --no-cache --update \
 RUN apk -X https://dl-cdn.alpinelinux.org/alpine/edge/main add --no-cache \
     lttng-ust
     
-RUN curl -L https://github.com/PowerShell/PowerShell/releases/download/v7.0.2/powershell-7.0.2-linux-alpine-x64.tar.gz -o /tmp/powershell.tar.gz
+RUN curl -L https://github.com/PowerShell/PowerShell/releases/download/v7.0.2/powershell-7.0.2-linux-alpine-x64.tar.gz -o /tmp/powershell.tar.gz \
+&& mkdir -p /opt/microsoft/powershell/7 \
+&& tar zxf /tmp/powershell.tar.gz -C /opt/microsoft/powershell/7 \
+&& chmod +x /opt/microsoft/powershell/7/pwsh \
+&& ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
 
-RUN mkdir -p /opt/microsoft/powershell/7
-
-RUN tar zxf /tmp/powershell.tar.gz -C /opt/microsoft/powershell/7
-
-RUN chmod +x /opt/microsoft/powershell/7/pwsh
-
-RUN ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
+RUN pwsh -Command Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted \
+&& pwsh -Command Install-Module -Name PSScriptAnalyzer
 
 COPY --from=build /go/src/github.com/aosapps/drone-sonar-plugin/drone-sonar /bin/
 WORKDIR /bin
